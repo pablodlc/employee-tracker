@@ -1,38 +1,38 @@
-INSERT INTO departments (name)
+INSERT INTO departments (dept_name)
 VALUES
 ("Sales"),
 ("Engineering"),
 ("Finance"),
 ("Legal");
 
-INSERT INTO positions (title, salary, department_id)
+INSERT INTO positions (job_title, is_mgr, salary, dept_id)
 VALUES
-("Sales Lead", 100000, 1),
-("Sales Person", 80000, 1),
-("Lead Engineer", 150000, 2),
-("Software Engineer", 120000, 2),
-("Accountant", 125000, 3),
-("Legal Team Lead", 250000, 4),
-("Lawyer", 190000, 4),
-("Punk Rock Warlord", 500000, 5);
+("Sales Lead", TRUE, 100000, 1),
+("Sales Person", FALSE, 80000, 1),
+("Lead Engineer", TRUE, 150000, 2),
+("Software Engineer", FALSE, 120000, 2),
+("Accountant", FALSE, 125000, 3),
+("Legal Team Lead", TRUE, 250000, 4),
+("Lawyer", FALSE, 190000, 4),
+("Punk Rock Warlord", TRUE, 500000, 5);
 
-INSERT INTO employees (first_name, last_name, position_id, manager_id)
+INSERT INTO employees (first_name, last_name, position_id)
 VALUES
-("Tim", "Armstrong", "Sales Lead", !!! ),
-("Lars", "Frederiksen", "Sales Person", !!!),
-("Matt", "Freeman", "Lead Engineer", !!!),
-("Brett", "Reed", "Software Engineer", !!!)
-("Jesse", "Michaels", "Accountant", !!!),
-("Dave", "Mello", "Legal Team Lead", !!!),
-("Branden", "Steineckert", "Lawyer", !!!),
-("Scott", "Sturgeon", "Software Engineer", !!!),
-("Alex", "Baillie", "Sales Person", !!!),
-("Brad", "Logan", "Lawyer", !!!),
-("Joe", "Strummer", "Punk Rock Warlord", NULL);
+("Tim", "Armstrong", 1),
+("Lars", "Frederiksen", 2),
+("Matt", "Freeman", 3),
+("Brett", "Reed", 4),
+("Jesse", "Michaels", 5),
+("Dave", "Mello", 6),
+("Branden", "Steineckert", 7),
+("Scott", "Sturgeon", 4),
+("Alex", "Baillie", 2),
+("Brad", "Logan", 7),
+("Joe", "Strummer", 8);
 
-INSERT INTO managers (first_name, last_name, department)
+INSERT INTO managers (emp_id, dept_id)
 VALUES
-("Tim", "Armstrong", "Sales"),
-("Matt", "Freeman", "Engineering"),
-("Dave", "Mello", "Legal"),
-("Joe", "Strummer", "Finance");
+(1, 1),
+(3, 2),
+(6, 4),
+(11, 3);

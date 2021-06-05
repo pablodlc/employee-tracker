@@ -4,36 +4,34 @@ DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS managers;
 
 
-
-
 CREATE TABLE departments (
-    id NOT NULL INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
     dept_name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE positions (
-    id NOT NULL INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
     job_title VARCHAR(30) NOT NULL,
     -- I think I need `DEFAULT: false` here and how to validate if `is_mgr` === true, creating an id
     is_mgr BOOLEAN,
-    salary NOT NULL DECIMAL(),
-    dept_id NOT NULL INT,
-    FOREIGN KEY (dept_id) REFERENCES department(id) ON DELETE SET NULL
+    salary DECIMAL(8,2),
+    dept_id INTEGER
+    -- FOREIGN KEY (dept_id) REFERENCES department(id) ON DELETE SET NULL
 );
 
 CREATE TABLE employees (
-    id NOT NULL INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     position_id INT NOT NULL,
-    FOREIGN KEY (position_id) REFERENCES position(id) ON DELETE SET NULL,
-    manager_id INT
+    -- FOREIGN KEY (position_id) REFERENCES position(id) ON DELETE SET NULL,
+    manager_id INTEGER
 );
 
 CREATE TABLE managers (
-    id NOT NULL INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(30) NOT NULL,
-    last_name VARCHAR(30) NOT NULL
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    emp_id INTEGER,
+    dept_id INTEGER
 );
 
 -- CREATE TABLE votes (
