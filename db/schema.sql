@@ -1,8 +1,6 @@
-DROP TABLE IF EXISTS departments;
-DROP TABLE IF EXISTS positions;
 DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS managers;
-
+DROP TABLE IF EXISTS positions;
+DROP TABLE IF EXISTS departments;
 
 CREATE TABLE departments (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -12,11 +10,10 @@ CREATE TABLE departments (
 CREATE TABLE positions (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     job_title VARCHAR(30) NOT NULL,
-    -- I think I need `DEFAULT: false` here and how to validate if `is_mgr` === true, creating an id
     is_mgr BOOLEAN,
     salary DECIMAL(8,2),
-    dept_id INTEGER
-    -- FOREIGN KEY (dept_id) REFERENCES department(id) ON DELETE SET NULL
+    dept_id INTEGER,
+    FOREIGN KEY (dept_id) REFERENCES departments(id) ON DELETE SET NULL
 );
 
 CREATE TABLE employees (
@@ -24,24 +21,6 @@ CREATE TABLE employees (
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     position_id INT NOT NULL,
-    -- FOREIGN KEY (position_id) REFERENCES position(id) ON DELETE SET NULL,
-    manager_id INTEGER
+    reportsTo INTEGER,
+    CONSTRAINT fk_reportsTo FOREIGN KEY (reportsTo) REFERENCES positions(id) ON DELETE SET NULL
 );
-
-CREATE TABLE managers (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    emp_id INTEGER,
-    dept_id INTEGER
-);
-
--- CREATE TABLE votes (
---     id INT AUTO_INCREMENT PRIMARY KEY,
---     voter_id INT NOT NULL,
---     candidate_id INT NOT NULL,
---     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
---     CONSTRAINT uc_voter UNIQUE (voter_id),
---     CONSTRAINT fk_voter FOREIGN KEY (voter_id) REFERENCES voters(id) ON DELETE CASCADE,
---     CONSTRAINT fk_candidate FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE
--- );
-
--- 6/3, 10:13PM. current idea is in `employee` table just declare a boolean for `is_mgr`. Connect that table to a manager id table 

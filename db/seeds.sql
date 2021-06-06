@@ -14,7 +14,7 @@ VALUES
 ("Accountant", FALSE, 125000, 3),
 ("Legal Team Lead", TRUE, 250000, 4),
 ("Lawyer", FALSE, 190000, 4),
-("Punk Rock Warlord", TRUE, 500000, 5);
+("Punk Rock Warlord", TRUE, 500000, 3);
 
 INSERT INTO employees (first_name, last_name, position_id)
 VALUES
@@ -29,10 +29,3 @@ VALUES
 ("Alex", "Baillie", 2),
 ("Brad", "Logan", 7),
 ("Joe", "Strummer", 8);
-
-INSERT INTO managers (emp_id, dept_id)
-VALUES
-(1, 1),
-(3, 2),
-(6, 4),
-(11, 3);
