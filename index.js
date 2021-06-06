@@ -1,7 +1,9 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
+const mysql = require('mysql2');
+const db = require('./db/connection')
 
-const promptUser = () => {
+const homePrompt = () => {
     return inquirer.prompt([
         {
             type: 'list',
@@ -20,6 +22,7 @@ const promptUser = () => {
     ]).then(function (answer) {
         switch (answer.action) {
             case 'View All Departments':
+                console.log('looking for departments...');
                 viewDepts();
                 break;
             case 'View All Positions':
@@ -40,9 +43,20 @@ const promptUser = () => {
             case 'Update an Employee':
                 updateEmp();
                 break;
+            case 'EXIT':
+                break;
+            default:
+                break;
         }
     })
 }
 
+function viewDepts() {
+    db.query(`SELECT * FROM departments`, (err, res) => {
+        if (err) throw err;
+        console.table(res)
+    })
 
-promptUser();
+}
+
+homePrompt();
