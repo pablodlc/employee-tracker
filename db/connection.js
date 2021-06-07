@@ -9,4 +9,8 @@ const db = mysql.createConnection(
     }
 );
 
-module.exports = db;
+const exit = () => {
+    db.end();
+}
+
+module.exports = { db, exit };

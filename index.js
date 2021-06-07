@@ -1,28 +1,32 @@
 const inquirer = require("inquirer");
-const fs = require("fs");
 const mysql = require('mysql2');
-const db = require('./db/connection')
+const { db, exit } = require('./db/connection');
+const deptOptions = require('./lib/script');
+const consoleTable = require('console.table');
 
-const homePrompt = () => {
-    return inquirer.prompt([
-        {
-            type: 'list',
-            name: 'homepage',
-            message: 'You\'re Home. What would you like to do?',
-            choices: [
-                'View All Departments',
-                'View All Positions',
-                'View All Employees',
-                'Add a Department',
-                'Add a Position',
-                'Add an Employee',
-                'Update an Employee'
-            ]
-        }
-    ]).then(function (answer) {
-        switch (answer.action) {
-            case 'View All Departments':
-                console.log('looking for departments...');
+db.connect(function (err) {
+    if (err) throw err;
+    homePrompt();
+})
+
+function homePrompt() {
+    inquirer.prompt({
+        type: 'list',
+        name: 'homepage',
+        message: 'You\'re Home. What would you like to do?',
+        choices: [
+            'View All Departments',
+            'View All Positions',
+            'View All Employees',
+            'Add a Department',
+            'Add a Position',
+            'Add an Employee',
+            'Update an Employee'
+        ]
+    }).then((answers) => {
+        console.log(answers);
+        switch (answers.homepage) {
+            case { homepage: 'View All Departments' }:
                 viewDepts();
                 break;
             case 'View All Positions':
@@ -44,6 +48,7 @@ const homePrompt = () => {
                 updateEmp();
                 break;
             case 'EXIT':
+                exit();
                 break;
             default:
                 break;
@@ -51,12 +56,18 @@ const homePrompt = () => {
     })
 }
 
-function viewDepts() {
-    db.query(`SELECT * FROM departments`, (err, res) => {
+const viewDepts = () => {
+    let sql = `SELECT * FROM DEPARTMENTS`
+    db.query(sql, (err, res) => {
         if (err) throw err;
-        console.table(res)
+        console.table(res);
+        homePrompt();
+        // }).then(function () {
+        //     deptOptions();
+        // })
     })
-
 }
 
-homePrompt();
+const addDept = () => {
+
+}
