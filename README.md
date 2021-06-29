@@ -1,6 +1,24 @@
-Ent# employee-tracker
+# emp-track
 
-GIVEN a command-line application that accepts user input  
+## Description
+To view the video demonstration of this application, click this link: [emp-track](link).
+
+This application was written to meet or exceed the guidelines laid out in the provided [User Story](#User%20Story) and [Acceptance Criteria](#Acceptance%20Criteria).
+
+### Table of Contents
+- [User Story](#User%20Story)
+- [Acceptance Criteria](#Acceptance%20Criteria)
+- [Installation](#Installation)
+- [Usage](#Usage)
+- [Technologies](#Technologies)
+- [Future Developments](#Future%20Developments)
+- [Questions?](#Questions)
+
+#### User Story
+> AS A...
+
+#### Acceptance Criteria
+>GIVEN a command-line application that accepts user input  
 WHEN I start the application  
 THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department,   add a role, add an employee, and update an employee role  
 WHEN I choose to view all departments  
@@ -17,3 +35,18 @@ WHEN I choose to add an employee
 THEN I am prompted to enter the employee’s first name, last name, role, and manager and that employee is added to the database  
 WHEN I choose to update an employee role  
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database   
+
+## Installation
+
+## Usage
+
+## Technologies
+
+## Future Developments
+
+## Questions?
+Please feel free to contact me with any questions or comments, or visit my GitHub to see more of my work.  
+[Contact me by email](mailto:pablodlc@gmail.com)    
+[GitHub User pablodlc](https://github.com/pablodlc)
+
+__emp-track__ made with ❤️ by pablodlc

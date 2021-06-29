@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const { db } = require('./db/connection');
 // const deptOptions = require('./lib/script');
 const consoleTable = require('console.table');
+let addReportsTo;
 
 db.connect(function (err) {
     if (err) throw err;
@@ -43,10 +44,10 @@ function homePrompt() {
                 addPosition();
                 break;
             case 'Add an Employee':
-                addEmp();
+                addEmployee();
                 break;
             case 'Update an Employee':
-                updateEmp();
+                updatePosition();
                 break;
         }
     })
@@ -105,6 +106,166 @@ const addDept = () => {
         })
 }
 
+const addPosition = () => {
+    db.query('SELECT * FROM departments', (err, rows) => {
+        if (err) throw err;
+        let currentDepts = rows.map(x => x.dept_name)
+        inquirer.prompt([
+            {
+                type: "input",
+                message: "What is the name of the position to add?",
+                name: "jobTitle",
+                validate: newPosName => {
+                    if (newPosName) {
+                        return true;
+                    } else {
+                        console.log("Please enter a valid name.");
+                        return false;
+                    }
+                }
+            },
+            {
+                type: "input",
+                message: "What is the salary for this new position?",
+                name: "salary",
+                validate: newPosSalary => {
+                    if (newPosSalary) {
+                        return true;
+                    } else {
+                        console.log("Please enter a valid salary.");
+                        return false;
+                    }
+                }
+            },
+            {
+                type: "confirm",
+                message: "Is this new position in management?",
+                name: "isMgr",
+                default: false,
+            },
+            {
+                type: "list",
+                message: "In which department do you wish to add the new position?",
+                name: "posDept",
+                choices: currentDepts,
+            },
+            {
+                type: "list",
+                message: "To whom does this position report?",
+                name: "reports",
+                choices: [
+                    'Punk Rock Warlord',
+                    'Sales Lead',
+                    'Lead Engineer',
+                    'Legal Team Lead'
+                ]
+            },
+        ])
+            .then(answer => {
+                let sal = parseInt(answer.salary);
+                let dept = answer.posDept;
+                let deptId;
+                for (const row of rows) {
+                    if (row.dept_name === dept) {
+                        deptId = row.id;
+                    }
+                }
+
+                let reportsToIndex = 0;
+                switch (answer.reports) {
+                    case 'Punk Rock Warlord':
+                        addReportsTo = reportsToIndex + 1;
+                        break;
+                    case 'Sales Lead':
+                        addReportsTo = reportsToIndex + 2;
+                        break;
+                    case 'Lead Engineer':
+                        addReportsTo = reportsToIndex + 3;
+                        break;
+                    case 'Legal Team Lead':
+                        addReportsTo = reportsToIndex + 4;
+                        break;
+                };
+
+                let sql = `INSERT INTO positions (job_title, salary, is_mgr, dept_id, reports_to) VALUES (?, ?, ?, ?, ?)`
+                let params = [answer.jobTitle, sal, answer.isMgr, deptId, addReportsTo];
+                db.query(sql, params, (err, rows) => {
+                    if (err) throw err;
+                    console.log("New position successfully added.")
+                    posOptions();
+                })
+            })
+    })
+}
+
+const addEmployee = () => {
+    db.query('SELECT * FROM positions', (err, rows) => {
+        if (err) throw err;
+        let currentPositions = rows.map(x => x.job_title);
+        inquirer.prompt([
+            {
+                type: "input",
+                message: "What is the employee's first name?",
+                name: "firstName",
+                validate: firstNameInput => {
+                    if (firstNameInput) {
+                        return true;
+                    } else {
+                        console.log("Please enter a valid first name.");
+                        return false;
+                    }
+                }
+            },
+            {
+                type: "input",
+                message: "What is the employee's last name?",
+                name: "lastName",
+                validate: lastNameInput => {
+                    if (lastNameInput) {
+                        return true;
+                    } else {
+                        console.log("Please enter a valid last name.");
+                        return false;
+                    }
+                }
+            },
+            {
+                type: "list",
+                message: "What role would you like to assign to the new employee?",
+                name: "positions",
+                choices: currentPositions,
+            }
+        ])
+            .then(answer => {
+                let position = answer.positions;
+                let posId;
+                for (const row of rows) {
+                    if (row.job_title === position) {
+                        posId = row.id
+                    }
+                }
+
+                let sql = `INSERT INTO employees (first_name, last_name, position_id) VALUES (?, ?, ?)`
+                let params = [answer.firstName, answer.lastName, posId];
+                db.query(sql, params, (err, rows) => {
+                    if (err) throw err;
+                    console.log("New employee successfully added.")
+                    empOptions();
+                })
+            })
+    })
+}
+
+function updatePosition() {
+
+
+}
+
+
+
+
+
+
 function deptOptions() {
     inquirer.prompt({
         type: 'list',
@@ -115,7 +276,7 @@ function deptOptions() {
             'Add a Department',
             'Go Home',
         ]
-    }).then(function (answer) {
+    }).then(answer => {
         console.log(answer);
         switch (answer.deptOptions) {
             case 'View Departments':
@@ -131,31 +292,6 @@ function deptOptions() {
     })
 }
 
-const addPosition = () => {
-    inquirer.prompt({
-        type: "input",
-        message: "What is the name of the position to add? Or press CTRL+C to exit.",
-        name: "newPosition",
-        validate: newPosName => {
-            if (newPosName) {
-                return true;
-            } else {
-                console.log("Please enter a valid name.");
-                return false;
-            }
-        }
-    })
-        .then(answer => {
-            let sql = `INSERT INTO positions (job_title) VALUES (?)`
-            let params = answer.newPosition;
-            db.query(sql, params, (err, rows) => {
-                if (err) throw err;
-                console.log("New position successfully added.")
-                posOptions();
-            })
-        })
-}
-
 function posOptions() {
     inquirer.prompt({
         type: "list",
@@ -167,41 +303,18 @@ function posOptions() {
             "Go Home",
         ]
     })
-        .then(function (answer) {
+        .then(answer => {
             switch (answer.posOptions) {
                 case "View Positions":
                     viewPositions();
+                    break;
                 case "Add Position":
                     addPosition();
                     break;
                 case "Go Home":
                     homePrompt();
+                    break;
             }
-        })
-}
-
-const addEmployee = () => {
-    inquirer.prompt({
-        type: "input",
-        message: "What is the name of the position to add? Or press CTRL+C to exit.",
-        name: "newEmployee",
-        validate: newPosName => {
-            if (newPosName) {
-                return true;
-            } else {
-                console.log("Please enter a valid name.");
-                return false;
-            }
-        }
-    })
-        .then(answer => {
-            let sql = `INSERT INTO employees (first_name, last_name, position_id, reportsTo) VALUES (?, ?, ?, ?)`
-            let params = [answer.newPosition;
-            db.query(sql, params, (err, rows) => {
-                if (err) throw err;
-                console.log("New position successfully added.")
-                posOptions();
-            })
         })
 }
 
@@ -216,17 +329,17 @@ function empOptions() {
             "Go Home",
         ]
     })
-        .then(function (answer) {
-            switch (answer.posOptions) {
+        .then(answer => {
+            switch (answer.empOptions) {
                 case "View Employees":
                     viewEmps();
+                    break;
                 case "Add Employee":
                     addEmployee();
                     break;
-                case "Update Employee":
-                    updateEmployee();
                 case "Go Home":
                     homePrompt();
+                    break;
             }
         })
 }
