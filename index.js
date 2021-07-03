@@ -202,6 +202,7 @@ const addEmployee = () => {
     db.query('SELECT * FROM positions', (err, rows) => {
         if (err) throw err;
         let currentPositions = rows.map(x => x.job_title);
+
         inquirer.prompt([
             {
                 type: "input",
@@ -239,6 +240,7 @@ const addEmployee = () => {
             .then(answer => {
                 let position = answer.positions;
                 let posId;
+
                 for (const row of rows) {
                     if (row.job_title === position) {
                         posId = row.id
@@ -257,9 +259,69 @@ const addEmployee = () => {
 }
 
 function updatePosition() {
+    db.query("SELECT first_name, last_name, id FROM employees", (err, res) => {
+        if (err) throw err;
+        const employed = res.map(employees => ({ name: employees.first_name + " " + employees.last_name }));
+
+        inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "empName",
+                    message: "Which employee would you like to update?",
+                    choices: employed
+                },
+                {
+                    type: "list",
+                    name: "empAction",
+                    message: "What is it you're asking me to do?",
+                    choices: ["Update Role", "Go Home", "Terminate"]
+                }
+            ])
+            .then(answer => {
 
 
+                if (answer.empAction === "Update Role") {
+
+                    db.query("SELECT * FROM positions",
+                        function (err, res2) {
+                            let roles = res2.map(positions => positions.job_title);
+
+                            inquirer
+                                .prompt([
+                                    {
+                                        type: "list",
+                                        name: "newRole",
+                                        message: "What is this employees new role?",
+                                        choices: roles
+                                    }
+                                ])
+
+
+
+                                .then(response => {
+
+                                    db.query(`SELECT positions.id FROM positions WHERE job_title = ${response.newRole}`,
+                                        function (err, res3) {
+                                            console.log(res3);1
+
+                                            db.query(`UPDATE employees SET position_id = ${response.newRole} WHERE id = ${employed}`, (err3, res3) => {
+                                                // if (err3) throw err3
+                                                console.log("Employee successfully updated.");
+                                                posOptions();
+                                            }
+                                                // posOptions()
+                                                // })
+
+                                            );
+                                        })
+                                })
+                        })
+                }
+            })
+    })
 }
+
 
 
 
