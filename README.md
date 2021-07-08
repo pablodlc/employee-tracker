@@ -1,7 +1,10 @@
 # emp-track
 
 ## Description
-To view the video demonstration of this application, click this link: [emp-track](link).
+To view the video demonstration of this application, click this link: [emp-track](https://github.com/pablodlc/employee-tracker/blob/main/assets/emp-track.gif).
+
+Or watch the gif below!  
+![emp-track](./assets/emp-track.gif)
 
 This application was written to meet or exceed the guidelines laid out in the provided [User Story](#User%20Story) and [Acceptance Criteria](#Acceptance%20Criteria).
 
@@ -9,8 +12,6 @@ This application was written to meet or exceed the guidelines laid out in the pr
 - [User Story](#User%20Story)
 - [Acceptance Criteria](#Acceptance%20Criteria)
 - [Installation](#Installation)
-- [Usage](#Usage)
-- [Technologies](#Technologies)
 - [Future Developments](#Future%20Developments)
 - [Questions?](#Questions)
 
@@ -36,13 +37,8 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 WHEN I choose to update an employee role  
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database   
 
-## Installation
-
-## Usage
-
-## Technologies
-
 ## Future Developments
+Clearly this is an incomplete work. Future developments would include fixing the broken `update-employees` function and putting in the joins so that the tables would be easier to read.
 
 ## Questions?
 Please feel free to contact me with any questions or comments, or visit my GitHub to see more of my work.  
